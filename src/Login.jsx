@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 /* ─── GLOBAL STYLES ──────────────────────────────────────────────────────── */
 if (!document.getElementById('tutly-login-styles')) {
@@ -76,41 +76,22 @@ if (!document.getElementById('tutly-login-styles')) {
 
 /* ─── COMPONENT ─────────────────────────────────────────────────────────── */
 const PROFESSOR_EMAIL = 'profesor@tutly.com';
+const PROFESSOR_PASSWORD = 'TUTLY2026';
 
 export default function Login() {
-  const navigate = useNavigate();
-
   const [email, setEmail]         = useState('');
   const [password, setPassword]   = useState('');
-  const [emailErr, setEmailErr]   = useState('');
-  const [passErr, setPassErr]     = useState('');
   const [globalErr, setGlobalErr] = useState('');
-  const [loading, setLoading]     = useState(false);
   const [success, setSuccess]     = useState(false);
-
-  const validate = () => {
-    let ok = true;
-    setEmailErr(''); setPassErr(''); setGlobalErr('');
-    if (!email) { setEmailErr('El correo es requerido.'); ok = false; }
-    else if (!/\S+@\S+\.\S+/.test(email)) { setEmailErr('Ingresa un correo válido.'); ok = false; }
-    if (!password) { setPassErr('La contraseña es requerida.'); ok = false; }
-    else if (password.length < 6) { setPassErr('Mínimo 6 caracteres.'); ok = false; }
-    return ok;
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (email.trim().toLowerCase() === PROFESSOR_EMAIL) {
-        setSuccess(true);
-      } else {
-        setGlobalErr('Credenciales incorrectas.');
-      }
-    }, 900);
+    setGlobalErr('');
+    if (email === PROFESSOR_EMAIL && password === PROFESSOR_PASSWORD) {
+      setSuccess(true);
+    } else {
+      setGlobalErr('Credenciales incorrectas');
+    }
   };
 
   /* ── Success State ── */
@@ -135,12 +116,9 @@ export default function Login() {
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#e5e5e5', marginBottom: '10px' }}>
-            Acceso autorizado
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#86efac', lineHeight: 1.6 }}>
+            Acceso autorizado. Redirigiendo al panel...
           </h2>
-          <p style={{ fontSize: '.9rem', color: '#86efac', lineHeight: 1.6 }}>
-            Redirigiendo al panel de tutorías...
-          </p>
         </div>
       </div>
     );
@@ -213,10 +191,9 @@ export default function Login() {
                 autoComplete="email"
                 placeholder="tu@correo.com"
                 value={email}
-                onChange={e => { setEmail(e.target.value); if (emailErr) setEmailErr(''); if (globalErr) setGlobalErr(''); }}
-                className={`l-input${emailErr ? ' error' : ''}`}
+                onChange={e => { setEmail(e.target.value); if (globalErr) setGlobalErr(''); }}
+                className="l-input"
               />
-              {emailErr && <span style={{ display: 'block', marginTop: '5px', fontSize: '.76rem', color: '#f87171' }}>{emailErr}</span>}
             </div>
 
             {/* Password */}
@@ -230,15 +207,14 @@ export default function Login() {
                 autoComplete="current-password"
                 placeholder="••••••••"
                 value={password}
-                onChange={e => { setPassword(e.target.value); if (passErr) setPassErr(''); if (globalErr) setGlobalErr(''); }}
-                className={`l-input${passErr ? ' error' : ''}`}
+                onChange={e => { setPassword(e.target.value); if (globalErr) setGlobalErr(''); }}
+                className="l-input"
               />
-              {passErr && <span style={{ display: 'block', marginTop: '5px', fontSize: '.76rem', color: '#f87171' }}>{passErr}</span>}
             </div>
 
             {/* Submit */}
-            <button type="submit" disabled={loading} className="l-btn-primary" style={{ marginTop: '4px' }}>
-              {loading ? 'Verificando...' : 'Iniciar Sesión'}
+            <button type="submit" className="l-btn-primary" style={{ marginTop: '4px' }}>
+              Iniciar Sesión
             </button>
           </form>
 
